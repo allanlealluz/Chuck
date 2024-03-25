@@ -13,6 +13,28 @@
     <input type="text" name="pw" id="pw"> 
     <button name='login'>Log in</button>
     <a href="index.php"><button type="button">Cancel</button></a>
-    </form>
+    </form
+    <?php
+    require_once "db_function.php";
+    $conn = new DB();
+    if(isset($_POST['login'])){
+        $conn->getConnection();
+        //check if the user is already logged in
+        session_start();
+        if(isset($_SESSION['user'])){
+            header('Location: index.php');
+        }
+        $email = $_POST['email'];
+        $password = $_POST['pw'];
+        $db = new DB();
+        $res = $db->login($email, $password);
+        if($res === false){
+            echo "<script>alert('Wrong email or password!')</script>";
+        }else{
+            $_SESSION['user'] = 1;
+            header('Location: index.php');
+        }
+    }
+    ?>
 </body>
 </html>
